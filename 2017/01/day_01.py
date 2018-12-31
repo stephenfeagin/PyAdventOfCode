@@ -29,14 +29,13 @@ def part_2(num):
     return total
 
 if __name__ == "__main__":
-    if __file__ == "aoc.py":
-        INPUT = args.file
-    else:
-        INPUT = input("Puzzle input: ")
+    INPUT = input("Puzzle input: ")
 
     with open(INPUT, "r") as f:
         NUM = int(f.read())
 
-    print(f"Part 1: {part_1(NUM)}")
-    print(f"Part 2: {part_2(NUM)}")
+    print("Part 1: ", end="")
+    print(part_1(NUM))
+    print("Part 2: ", end="")
+    print(part_2(NUM))
 
