@@ -1,6 +1,7 @@
 """
 2018 Day 1: Chronal Calibration
 """
+from collections import defaultdict
 import unittest
 
 
@@ -25,14 +26,15 @@ def part_2(data):
     next item in the data list
     """
 
-    freqs = [0]
+    freqs = defaultdict(int)
     current_freq = 0
+    freqs[current_freq] += 1
     while True:
         for change in data:
             current_freq += change
-            if current_freq in freqs:
+            if freqs[current_freq] > 0:
                 return current_freq
-            freqs.append(current_freq)
+            freqs[current_freq] += 1
 
 # Testing
 class TestDay1(unittest.TestCase):
