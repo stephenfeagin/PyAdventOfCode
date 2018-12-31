@@ -28,8 +28,7 @@ class TestDay3(unittest.TestCase):
                     2: Claim(2, 3, 1, 4, 4),
                     3: Claim(3, 5, 5, 2, 2)}
         OUTPUT = read_input(TEST_DATA)
-        for key in EXPECTED.keys():
-            self.assertEqual(EXPECTED[key], OUTPUT[key])
+        self.assertDictEqual(EXPECTED, OUTPUT)
 
     def test_part_1(self):
 
