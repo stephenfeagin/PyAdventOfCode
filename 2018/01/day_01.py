@@ -53,12 +53,3 @@ class TestDay1(unittest.TestCase):
         for data, result in test_cases:
             self.assertEqual(part_2(data), result)
 
-if __name__ == "__main__":
-    if __file__ == "aoc.py":
-        INPUT = args.file
-    else:
-        INPUT = input("Puzzle input:")
-    DATA = read_input(INPUT)
-
-    print(f"Part 1: {part_1(DATA)}")
-    print(f"Part 2: {part_2(DATA)}")
