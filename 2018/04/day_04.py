@@ -10,8 +10,9 @@ import re
 from typing import Callable, DefaultDict, Dict, List
 
 
-def create_minute_dict() -> DefaultDict[int, int]:
-    return defaultdict(int)
+def create_minute_dict() -> Dict[int, int]:
+    """Start with -1 because any minute before midnight is coded as -1"""
+    return {i: 0 for i in range(-1, 60)}
 
 
 @dataclass
@@ -32,8 +33,7 @@ class Guard:
     awake: Dict[int, int] = field(default_factory=create_minute_dict)
 
     def most_asleep_minute(self) -> int:
-        max_val = max(self.asleep.keys(), key=lambda k: self.asleep[k])
-        return max_val
+        return max(self.asleep.keys(), key=lambda k: self.asleep[k])
 
     def sum_asleep_minutes(self) -> int:
         return sum(self.asleep.values())
@@ -132,5 +132,23 @@ def part_1(guards: Dict[int, Guard]) -> int:
             guard_id = guard.num
             max_minutes_asleep = guard.sum_asleep_minutes()
             most_asleep_minute = guard.most_asleep_minute()
+
+    return guard_id * most_asleep_minute
+
+
+def part_2(guards: Dict[int, Guard]) -> int:
+    """
+    Returns the product of the ID of the guard who had the greatest number of
+    days asleep at a particular minute and the number of that minute
+    """
+    guard_id: int = 0
+    most_asleep_minute: int = 0
+    minutes_slept_then: int = 0
+
+    for guard in guards.values():
+        if guard.asleep[guard.most_asleep_minute()] > minutes_slept_then:
+            guard_id = guard.num
+            most_asleep_minute = guard.most_asleep_minute()
+            minutes_slept_then = guard.asleep[guard.most_asleep_minute()]
 
     return guard_id * most_asleep_minute
