@@ -1,4 +1,4 @@
-from day_04 import Guard, part_1, read_input, track_guards
+from day_04 import part_1, read_input, track_guards
 
 
 INPUT = "input.txt"
