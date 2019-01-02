@@ -2,7 +2,16 @@ import unittest
 
 
 def part_1(polymer):
-    return 10
+    i = 0
+    while i < (len(polymer) - 1):
+        if polymer[i].swapcase() == polymer[i+1]:
+            try:
+                polymer = polymer[:i-1] + polymer[i+2:]
+            except IndexError:
+                polymer = polymer[2:]
+        else:
+            i += 1
+    return len(polymer)
 
 
 class TestDay5(unittest.TestCase):
