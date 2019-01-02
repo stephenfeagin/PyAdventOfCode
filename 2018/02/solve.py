@@ -7,4 +7,3 @@ with open(INPUT, "r") as f:
 
 print("Part 1:", part_1(DATA))
 print("Part 2:", part_2(DATA))
-

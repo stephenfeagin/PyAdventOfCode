@@ -2,6 +2,7 @@
 2017 Day 1: Inverse Captcha
 """
 
+
 def part_1(num):
     num_str = str(num)
     num_len = len(num_str)
@@ -12,6 +13,7 @@ def part_1(num):
         if num_str[i] == num_str[j]:
             total += int(num_str[i])
     return total
+
 
 def part_2(num):
     num_str = str(num)
@@ -28,6 +30,7 @@ def part_2(num):
             total += int(num_str[i])
     return total
 
+
 if __name__ == "__main__":
     INPUT = input("Puzzle input: ")
 
@@ -38,4 +41,3 @@ if __name__ == "__main__":
     print(part_1(NUM))
     print("Part 2: ", end="")
     print(part_2(NUM))
-

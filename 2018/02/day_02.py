@@ -19,12 +19,12 @@ def part_1(data):
             three_times += 1
     return two_times * three_times
 
+
 def part_2(data):
     results = []
     for code in data:
         for i in range(len(code)):
-            substring = code[:i] + "*" + code[i + 1:]
+            substring = code[:i] + "*" + code[i + 1 :]
             if substring in results:
                 return re.sub(pattern="\*", repl="", string=substring)
             results.append(substring)
-

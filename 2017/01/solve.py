@@ -8,4 +8,3 @@ with open(INPUT, "r") as f:
 
 print("Part 1: ", part_1(NUM))
 print("Part 2: ", part_2(NUM))
-
