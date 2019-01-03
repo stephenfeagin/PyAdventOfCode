@@ -19,12 +19,18 @@ not react.
 """
 
 import re
-from typing import Set
+from typing import List, Set
 import unittest
 
 
 def part_1(polymer: str) -> int:
-    """How many units remain after fully reacting the polymer you scanned?"""
+    """
+    How many units remain after fully reacting the polymer you scanned?
+
+    This answer is shamelessly copied from a post by Reddit user eltrufas.
+    I had originally solved this using the method shown below in this
+    docstring, which worked fine but would crash when attempting to use it in
+    part 2 (MemoryError).
 
     i: int = 0
 
@@ -39,6 +45,25 @@ def part_1(polymer: str) -> int:
         else:
             i += 1
     return len(polymer)
+    """
+
+    # Initialize an empty list to hold the characters that will be in the
+    # final polymer
+    result: List[str] = []
+
+    # For each character, check if the result list is empty.
+    # If it's not empty and the last item in it is equal to the opposite case
+    # of the character, remove the last item from results and move on to the
+    # next character.
+    # Otherwise, append the character to the end of the results vector.
+    for char in polymer:
+        if result and char == result[-1].swapcase():
+            result.pop()
+
+        else:
+            result.append(char)
+
+    return len(result)
 
 
 def part_2(polymer: str) -> int:
@@ -50,22 +75,21 @@ def part_2(polymer: str) -> int:
     its length.
     """
     letters: Set = set(polymer.casefold())
-    min_length: int = len(polymer)
+    lengths: List[int] = []
 
     for letter in letters:
         sub_polymer: str = re.sub(
-            pattern=letter, repl="", string=polymer, flags=re.IGNORECASE
+                pattern=letter, repl="", string=polymer, flags=re.IGNORECASE
         )
-        len_sub: int = part_1(sub_polymer)
-        if len_sub < min_length:
-            min_length = len_sub
+        lengths.append(part_1(sub_polymer))
 
-    return min_length
+    return min(lengths)
 
 
 class TestDay5(unittest.TestCase):
     def setUp(self):
-        self.TEST_CASE = "dabAcCaCBAcCcaDA"
+        with open("test_input.txt", "r") as f:
+            self.TEST_CASE = f.read().strip()
 
     def test_part_1(self):
         self.assertEqual(part_1(self.TEST_CASE), 10)
