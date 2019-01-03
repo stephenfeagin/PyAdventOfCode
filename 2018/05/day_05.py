@@ -18,7 +18,8 @@ type but opposite polarity, whereas r and s are entirely different types and do
 not react.
 """
 
-from string import ascii_uppercase
+import re
+from typing import Set
 import unittest
 
 
@@ -48,7 +49,18 @@ def part_2(polymer: str) -> int:
     (regardless of polarity), fully react the remaining polymer, and measure
     its length.
     """
-    return 4
+    letters: Set = set(polymer.casefold())
+    min_length: int = len(polymer)
+
+    for letter in letters:
+        sub_polymer: str = re.sub(
+            pattern=letter, repl="", string=polymer, flags=re.IGNORECASE
+        )
+        len_sub: int = part_1(sub_polymer)
+        if len_sub < min_length:
+            min_length = len_sub
+
+    return min_length
 
 
 class TestDay5(unittest.TestCase):
