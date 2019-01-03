@@ -1,9 +1,10 @@
-# 2018 Day 5: Alchemical Reduction
+# [2018 Day 5: Alchemical Reduction](https://adventofcode.com/2018/day/5)
 
 ## Original Brief
 
 ```
 --- Day 5: Alchemical Reduction ---
+
 You've managed to sneak in to the prototype suit manufacturing lab. The Elves
 are making decent progress, but are still struggling with the suit's size
 reduction capabilities.
@@ -42,6 +43,7 @@ this puzzle and others, the input is large; if you copy/paste your input, make
 sure you get the whole thing.)
 
 --- Part Two ---
+
 Time to improve the polymer.
 
 One of the unit types is causing problems; it's preventing the polymer from
