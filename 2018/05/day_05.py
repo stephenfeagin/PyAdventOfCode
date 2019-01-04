@@ -79,7 +79,7 @@ def part_2(polymer: str) -> int:
 
     for letter in letters:
         sub_polymer: str = re.sub(
-                pattern=letter, repl="", string=polymer, flags=re.IGNORECASE
+            pattern=letter, repl="", string=polymer, flags=re.IGNORECASE
         )
         lengths.append(part_1(sub_polymer))
 
