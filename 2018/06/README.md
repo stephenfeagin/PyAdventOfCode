@@ -113,5 +113,5 @@ Your actual region will need to be much larger than this example, though,
 instead including all locations with a total distance of less than 10000.
 
 What is the size of the region containing all locations which have a total
-distance to all given coordinates of less than 10000?
+distance to all given coordinates of less than 10000?:
 ```

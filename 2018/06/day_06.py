@@ -1,7 +1,7 @@
 from __future__ import annotations
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import DefaultDict, List, Set, Union
+from typing import DefaultDict, Dict, List, Set, Union
 import unittest
 
 
@@ -74,8 +74,23 @@ def part_1(points: List[Point]) -> int:
         nearest = pt.find_nearest_point(points)
         if nearest is not None:
             pt_areas[nearest] += 1
-
     return max(pt_areas.values())
+
+
+def part_2(points: List[Point], limit: int) -> int:
+    # Again, get the canvas
+    canvas = define_canvas(points)
+
+    # Initialize an accumulator variable
+    area = 0
+    
+    # For each point in canvas acting as an origin, if the sum of the distances
+    # to all other points is less than `limit`, add one to `area`
+    # This takes advantage of using int(True) == 1
+    for origin in canvas:
+        area += sum(origin.get_distance(pt) for pt in points) < limit
+
+    return area
 
 
 class TestDay6(unittest.TestCase):
@@ -96,4 +111,4 @@ class TestDay6(unittest.TestCase):
         self.assertEqual(part_1(self.POINTS), 17)
 
     def test_part_2(self):
-        self.assertEqual(part_2(self.POINTS), 30)
+        self.assertEqual(part_2(self.POINTS, 32), 16)
