@@ -50,20 +50,22 @@ def read_input(fname: str) -> List[Point]:
     return results
 
 
-def define_canvas(min_x: int, min_y: int, max_x: int, max_y: int) -> Set[Point]:
-    """Returns the set of all points in a plane bounded by the arguments"""
-    return set(Point(x, y) for x in range(min_x, max_x + 1) for y in range(min_y, max_y + 1))
-
-
-def part_1(points: List[Point]) -> int:
+def define_canvas(points: List[Point]) -> Set[Point]:
+    """
+    Returns the set of all points in a plane bounded by the provided points
+    """
     max_x: int = max(pt.x for pt in points)
     min_x: int = min(pt.x for pt in points)
     max_y: int = max(pt.y for pt in points)
     min_y: int = min(pt.y for pt in points)
 
+    return set(Point(x, y) for x in range(min_x, max_x + 1) for y in range(min_y, max_y + 1))
+
+
+def part_1(points: List[Point]) -> int:
     # Get the canvas that we're working with. This helps to eliminate points
     # with non-finite areas
-    canvas = define_canvas(min_x, min_y, max_x, max_y)
+    canvas = define_canvas(points)
 
     # Make a default dict to keep track of the areas of the points
     pt_areas: DefaultDict[Point, int] = defaultdict(int)
@@ -92,3 +94,6 @@ class TestDay6(unittest.TestCase):
 
     def test_part_1(self):
         self.assertEqual(part_1(self.POINTS), 17)
+
+    def test_part_2(self):
+        self.assertEqual(part_2(self.POINTS), 30)
