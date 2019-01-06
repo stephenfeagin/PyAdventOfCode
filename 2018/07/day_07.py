@@ -2,11 +2,10 @@
 2018 Day 7: The Sum of Its Parts
 """
 from __future__ import annotations
-from collections import defaultdict
 from dataclasses import dataclass, field
 import re
 from string import ascii_uppercase
-from typing import DefaultDict, Dict, List, Set
+from typing import Dict, List, Set
 
 
 @dataclass
