@@ -5,11 +5,9 @@ from __future__ import annotations
 from collections import defaultdict
 from dataclasses import dataclass, field
 import re
-from typing import DefaultDict, Dict, List, Set, Tuple
-import unittest
+from string import ascii_uppercase
+from typing import DefaultDict, Dict, List, Set
 
-
-steps: Dict[str, Dict[str, Set[str]]]
 
 @dataclass
 class Step:
@@ -30,12 +28,12 @@ def read_input(fname: str) -> Dict[str, Step]:
             except TypeError:
                 raise RuntimeError("Error reading input file")
 
-            if parent_step in results.keys():
+            if parent_step in results:
                 results[parent_step].children.add(child_step)
             else:
                 results[parent_step] = Step(parent_step, children={child_step})
 
-            if child_step in results.keys():
+            if child_step in results:
                 results[child_step].parents.add(parent_step)
             else:
                 results[child_step] = Step(child_step, parents={parent_step})
@@ -59,3 +57,39 @@ def part_1(steps: Dict[str, Step]) -> str:
                 ready.add(child)
 
     return answer
+
+
+def part_2(steps: Dict[str, Step], n_workers: int = 5, delay: int = 60) -> int:
+    timer = 0
+    ready = {step.letter for step in steps.values() if not step.parents}
+    workers = [{"letter": "", "duration": 0} for _ in range(n_workers)]
+    answer = ""
+    durations = {
+        letter: ascii_uppercase.index(letter) + 1 + delay for letter in ascii_uppercase
+    }
+
+    while True:
+        buf = ""
+        for w in workers:
+            if w["letter"]:
+                w["duration"] -= 1
+            if w["duration"] == 0:
+                ltr = w["letter"]
+                if ltr in steps:
+                    for child in steps[ltr].children:
+                        if ltr in steps[child].parents:
+                            steps[child].parents.remove(ltr)
+                        if not steps[child].parents:
+                            ready.add(child)
+                    buf += w["letter"]
+                    w["letter"] = ""
+                if ready:
+                    current_letter = min(ready)
+                    w["letter"] = current_letter
+                    ready.remove(current_letter)
+                    w["duration"] = durations[current_letter]
+        answer += "".join(sorted(buf))
+        if len(answer) == len(steps):
+            return timer
+        timer += 1
+
