@@ -1,15 +1,14 @@
-from day_07 import part_1, read_input
+from day_07 import part_1, read_input, Step
 
 
-STEPS = [
-    ("C", "A"),
-    ("C", "F"),
-    ("A", "B"),
-    ("A", "D"),
-    ("B", "E"),
-    ("D", "E"),
-    ("F", "E"),
-]
+STEPS = {
+        "A": Step(letter="A", parents={"C"}, children={"D", "B"}),
+        "B": Step(letter="B", parents={"A"}, children={"E"}),
+        "C": Step(letter="C", parents=set(), children={"F", "A"}),
+        "D": Step(letter="D", parents={"A"}, children={"E"}),
+        "E": Step(letter="E", parents={"F", "D", "B"}, children=set()),
+        "F": Step(letter="F", parents={"C"}, children={"E"}),
+        }
 
 
 def test_read_input():
