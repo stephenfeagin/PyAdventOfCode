@@ -104,10 +104,6 @@ def part_2(steps: Dict[str, Step], n_workers: int = 5, delay: int = 60) -> int:
     }
 
     while True:
-        # I use a buffer variable for each run through so that I can put it in
-        # alphabetical order before tacking it onto the answer
-        buf = ""
-
         # For each worker, if it has a letter, decrement the duration by 1
         for w in workers:
             if w["letter"]:
@@ -123,7 +119,7 @@ def part_2(steps: Dict[str, Step], n_workers: int = 5, delay: int = 60) -> int:
                             steps[child].parents.remove(ltr)
                         if not steps[child].parents:
                             ready.add(child)
-                    buf += w["letter"]
+                    answer += ltr
                     w["letter"] = ""
                 # If there are any steps ready to go, add the first one
                 # (alphabetically) to the worker, and remove it from `ready`
@@ -132,7 +128,6 @@ def part_2(steps: Dict[str, Step], n_workers: int = 5, delay: int = 60) -> int:
                     w["letter"] = current_letter
                     ready.remove(current_letter)
                     w["duration"] = durations[current_letter]
-        answer += "".join(sorted(buf))
 
         # If the answer contains all of the steps, we're done!
         if set(answer) == set(steps):
