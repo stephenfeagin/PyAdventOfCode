@@ -1,41 +1,50 @@
 from collections import defaultdict
 import re
-from typing import DefaultDict, Dict, List, Set
+from typing import DefaultDict, Dict, List, Set, Tuple
 
 
-def read_input(fname: str) -> DefaultDict[str, List[str]]:
+def read_input(fname: str) -> Tuple[Set[str], DefaultDict[str, List[str]]]:
     pattern = re.compile(r"\b([A-Z])\b")
-    result: DefaultDict[str, List[str]] = defaultdict(list)
+    instruction_set: DefaultDict[str, List[str]] = defaultdict(list)
+    all_steps: Set[str] = set()
 
     with open(fname, "r") as f:
         for line in f:
-            child, parent = pattern.findall(line)
-            result[parent].append(child)
+            parent, child = pattern.findall(line)
+            instruction_set[parent].append(child)
+            all_steps.add(child)
+            all_steps.add(parent)
 
-    return result
+    return all_steps, instruction_set
 
 
 def find_ancestors(step: str, instruction_set: Dict[str, List[str]]) -> List[str]:
     results: List[str] = []
-    for node, descendants in instruction_set.items():
-        if step in descendants:
+    for node, children in instruction_set.items():
+        if step in children:
             results.append(node)
     return results
 
+def find_ready_steps(all_steps: Set[str], instruction_set: Dict[str, List[str]]) -> Set[str]:
+    return {
+        step for step in all_steps if not find_ancestors(step, instruction_set)
+    }
 
-def find_ready_steps(instruction_set: Dict[str, List[str]]) -> Set[str]:
-    return sorted({
-        step for step in instruction_set if not find_ancestors(step, instruction_set)
-    }, reverse=True)
 
-def part_1(instruction_set: Dict[str, List[str]]) -> str:
-    order: str = ""
-    all_steps = set(instruction_set)
-    while instruction_set: 
-        ready = find_ready_steps(instruction_set)
+def part_1(all_steps: Set[str], instruction_set: Dict[str, List[str]]) -> str:
+    answer: str = ""
+    ready = find_ready_steps(all_steps, instruction_set)
+    while ready: 
         current = ready.pop()
-        order += current
-        instruction_set.pop(current)
+        all_steps.remove(current)
+        instruction_set[current] = []
+        answer += current
+        ready = find_ready_steps(all_steps, instruction_set)
 
-    return order
+    return answer
 
+
+if __name__ == "__main__":
+    INPUT = "test_input.txt"
+    all_steps, instruction_set = read_input(INPUT)
+    print("Part 1:", part_1(all_steps, instruction_set))
