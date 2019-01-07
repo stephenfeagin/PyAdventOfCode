@@ -1,5 +1,7 @@
 # [2018 Day 6: Chronal Coordinates](https://adventofcode.com/2018/day/6)
 
+## Original Brief
+
 ```
 --- Day 6: Chronal Coordinates ---
 
