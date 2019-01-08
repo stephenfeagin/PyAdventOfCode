@@ -60,15 +60,57 @@ def part_2(
     ]
     timer: int = 0
     answer: str = ""
-    ready: List[str] = sorted(find_ready_steps(all_steps, instruction_set), reverse=True)
+    ready: List[str]
 
-    while ready or any(w["letter"] for w in workers):
-        pass
-
-    return 15
-
-
+    while True:
+        print("Timer:", timer)
+        for w in workers:
+            print("Worker:", w)
+            ready = sorted(
+                find_ready_steps(all_steps, instruction_set),
+                reverse=True
+            )
+            print("Ready:", ready)
+            
+            if w["letter"]:
+                w["time_left"] -= 1
+                if not w["time_left"]:
+                    answer += w["letter"]
+                    w["letter"] = ""
+            
+            if not w["letter"]:
+                try:
+                    w["letter"] = ready.pop()
+                except IndexError:
+                    pass
+                else:
+                    w["time_left"] = durations[w["letter"]]
+                    all_steps.remove(w["letter"])
+                    instruction_set[w["letter"]] = []
+        if not any(w["letter"] for w in workers):
+            return timer
+        timer += 1
+        
+        
+def part_2():
+    answer: str = ""
+    workers: Dict[str, int] = {}
+    while True:
+        
+            
+        # for _ in range(n_workers):
+        #     try:
+        #         current_letter = ready.pop()
+        #     except IndexError:
+        #         continue
+        #     else:
+        # workers.pop()......
+        
+        
 if __name__ == "__main__":
     INPUT = "test_input.txt"
     all_steps, instruction_set = read_input(INPUT)
     print("Part 1:", part_1(all_steps, instruction_set))
+    
+    all_steps, instruction_set = read_input("test_input.txt")
+    print("Part 2 Test:", part_2(all_steps, instruction_set, 2, 0))
