@@ -19,15 +19,20 @@ class Worker:
     letter: str = ""
     time: int = 0
 
-    def get_work(self, instruction_set: Dict[str, Step]) -> str:
-        return min(step for step in instruction_set.values() if not step.parents)
+    def get_work(self, instruction_set: Dict[str, Step], delay:int) -> str:
+        try:
+            self.letter = min(step for step in instruction_set.values() if not step.parents)
+        except:
+            pass
+        else:
+            self.time = ord(letter) - ord("A") + 1 + delay
 
-    def do_work(self, instruction_set: Dict[str, Step]) -> None:
+    def do_work(self, instruction_set: Dict[str, Step], delay:int) -> str:
         if self.letter:
             self.time -= 1
         if not self.time:
             completed = self.letter
-            self.letter = self.get_work(instruction_set)
+            return completed
 
 
 def read_input(fname: str) -> Dict[str, Step]:
@@ -68,6 +73,9 @@ def part_1(instruction_set: Dict[str, Step]) -> str:
                 pass
         instructions.pop(current)
     return answer
+
+
+def part_2(instruction_set, n_workers, delay):
 
 
 def part_2(instruction_set: Dict[str, Step], n_workers: int = 2, delay: int = 0) -> int:
