@@ -1,7 +1,14 @@
 from collections import defaultdict
+from dataclasses import dataclass
 import re
 from string import ascii_uppercase
 from typing import DefaultDict, Dict, List, Set, Tuple, Union
+
+
+@dataclass
+class Worker:
+    letter: str = ""
+    time: int = 0
 
 
 def read_input(fname: str) -> Tuple[Set[str], DefaultDict[str, List[str]]]:
@@ -46,71 +53,63 @@ def part_1(all_steps: Set[str], instruction_set: Dict[str, List[str]]) -> str:
     return answer
 
 
-def part_2(
-    all_steps: Set[str],
-    instruction_set: Dict[str, List[str]],
-    n_workers: int = 5,
-    delay: int = 60,
-) -> int:
-    durations: Dict[str, int] = {
-        ltr[1]: ltr[0] + 1 + delay for ltr in enumerate(ascii_uppercase)
-    }
-    workers: List[Dict[str, Union[str, int]]] = [
-        {"letter": "", "time_left": 0} for _ in range(n_workers)
-    ]
-    timer: int = 0
+def part_2(steps, instruction_set, n_workers, delay):
     answer: str = ""
-    ready: List[str]
+    workers: List[Worker] = [Worker() for _ in range(n_workers)]
+    in_progress: List[str] = []
+    durations = {
+        letter[1]: letter[0] + 1 + delay for letter in enumerate(ascii_uppercase)
+    }
+    timer: int = 0
+    print("Time", end="\t")
+    for i in range(n_workers):
+        print(f"W{i}", end="\t")
+    print("Answer")
 
     while True:
-        print("Timer:", timer)
         for w in workers:
-            print("Worker:", w)
-            ready = sorted(
-                find_ready_steps(all_steps, instruction_set),
-                reverse=True
-            )
-            print("Ready:", ready)
-            
-            if w["letter"]:
-                w["time_left"] -= 1
-                if not w["time_left"]:
-                    answer += w["letter"]
-                    w["letter"] = ""
-            
-            if not w["letter"]:
+
+            if w.letter:
+                w.time -= 1
+                if w.time == 0:
+                    answer += w.letter
+                    steps.remove(w.letter)
+                    in_progress.remove(w.letter)
+                    instruction_set[w.letter] = [] 
+                    w.letter = ""
+
+            if not w.letter:
+                ready = sorted(
+                    [
+                        step
+                        for step in find_ready_steps(steps, instruction_set)
+                        if step not in in_progress
+                    ],
+                    reverse=True,
+                )
                 try:
-                    w["letter"] = ready.pop()
+                    w.letter = ready.pop()
                 except IndexError:
                     pass
                 else:
-                    w["time_left"] = durations[w["letter"]]
-                    all_steps.remove(w["letter"])
-                    instruction_set[w["letter"]] = []
-        if not any(w["letter"] for w in workers):
+                    w.time = durations[w.letter]
+                    in_progress.append(w.letter)
+        print(timer, end="\t")
+        for w in workers:
+            print(f"{w.letter or '.'}", end="\t")
+        print(answer)
+        if not any(w.letter for w in workers):
             return timer
         timer += 1
-        
-        
-def part_2():
-    answer: str = ""
-    workers: Dict[str, int] = {}
-    while True:
-        
-            
-        # for _ in range(n_workers):
-        #     try:
-        #         current_letter = ready.pop()
-        #     except IndexError:
-        #         continue
-        #     else:
-        # workers.pop()......
-        
-        
+
+
 if __name__ == "__main__":
     INPUT = "test_input.txt"
     all_steps, instruction_set = read_input(INPUT)
     print("Part 1:", part_1(all_steps, instruction_set))
-    
+
     all_steps, instruction_set = read_input("test_input.txt")
     print("Part 2 Test:", part_2(all_steps, instruction_set, 2, 0))
+
+    all_steps, instruction_set = read_input("input.txt")
+    print("Part 2:", part_2(all_steps, instruction_set, 5, 60))
