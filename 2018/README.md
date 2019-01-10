@@ -4,6 +4,18 @@ My solutions for AoC 2018 are written in Python 3.7, using only the standard
 library. I have used black, mypy, and pytest for development purposes, but the
 solutions themselves have no external dependencies.
 
+Each directory contains the solutions for that day. Each day folder contains
+the following files:
+
+- `README.md`: The original brief from the AoC website and any notes and/or
+attribution
+- `day\_0x.py`: The solutions file for that day
+- `input.txt`: The full puzzle input from AoC
+- `test\_day\_0x.py`: File with pytest code for that day's examples
+- `test\_input\*.txt`: Optional test input file(s) for the examples. Not all
+days have this file, as the example input may be typed directly into
+`test\_day\_0x.py`.
+
 I have tried to be as consistent as possible across challenge days for 2018.
 Every `.py` file for completed solutions has been run through 
 [black](https://github.com/ambv/black) and [mypy](https://mypy-lang.org).
