@@ -1,7 +1,6 @@
 from collections import defaultdict, namedtuple
 import re
 from typing import DefaultDict, Dict, List, Tuple
-import unittest
 
 
 Claim = namedtuple("Claim", ["id", "left", "top", "width", "height"])
@@ -46,58 +45,11 @@ def part_2(claims: List[Claim], squares: Dict[Tuple[int, int], int]) -> int:
     return 0
 
 
-class TestDay3(unittest.TestCase):
-    def setUp(self):
-        self.TEST_FILE = "test_input.txt"
-        self.TEST_CLAIMS = [
-            Claim(1, 1, 3, 4, 4),
-            Claim(2, 3, 1, 4, 4),
-            Claim(3, 5, 5, 2, 2),
-        ]
+if __name__ == "__main__":
 
-        self.TEST_SQUARES = {
-            (1, 3): 1,
-            (1, 4): 1,
-            (1, 5): 1,
-            (1, 6): 1,
-            (2, 3): 1,
-            (2, 4): 1,
-            (2, 5): 1,
-            (2, 6): 1,
-            (3, 1): 1,
-            (3, 2): 1,
-            (3, 3): 2,
-            (3, 4): 2,
-            (3, 5): 1,
-            (3, 6): 1,
-            (4, 1): 1,
-            (4, 2): 1,
-            (4, 3): 2,
-            (4, 4): 2,
-            (4, 5): 1,
-            (4, 6): 1,
-            (5, 1): 1,
-            (5, 2): 1,
-            (5, 3): 1,
-            (5, 4): 1,
-            (5, 5): 1,
-            (5, 6): 1,
-            (6, 1): 1,
-            (6, 2): 1,
-            (6, 3): 1,
-            (6, 4): 1,
-            (6, 5): 1,
-            (6, 6): 1,
-        }
+    input_file = "input.txt"
+    input_data = read_input(input_file)
+    squares = tally_squares(input_data)
 
-    def test_read_input(self):
-        self.assertEqual(read_input(self.TEST_FILE), self.TEST_CLAIMS)
-
-    def test_tally_squares(self):
-        self.assertDictEqual(tally_squares(self.TEST_CLAIMS), self.TEST_SQUARES)
-
-    def test_part_1(self):
-        self.assertEqual(part_1(self.TEST_SQUARES), 4)
-
-    def test_part_2(self):
-        self.assertEqual(part_2(self.TEST_CLAIMS, self.TEST_SQUARES), 3)
+    print("Part 1:", part_1(squares))
+    print("Part 2:", part_2(input_data, squares))
