@@ -1,136 +1,117 @@
 """
 2018 Day 7: The Sum of Its Parts
+
+This solution is adapted from Reddit user jonathan_paulson's solution on the
+Day 7 Solutions Megathread -- 
+https://www.reddit.com/r/adventofcode/comments/a3wmnl/2018_day_7_solutions/eb9sfnm
+
+I still can't really tell why my original solution did not work.
 """
-from __future__ import annotations
-from dataclasses import dataclass, field
+
+from collections import defaultdict
 import re
-from string import ascii_uppercase
-from typing import Dict, List, Set
+from typing import DefaultDict, Dict, List, Set, Tuple
 
 
-@dataclass
-class Step:
-    """Data class to hold information about steps for sleigh construction"""
-
-    letter: str
-    parents: Set[str] = field(default_factory=set)
-    children: Set[str] = field(default_factory=set)
-
-
-def read_input(fname: str) -> Dict[str, Step]:
+class Challenge:
     """
-    Reads in a text file of the format provided by the AoC website.
+    A class to hold all of the data about the Day 7 challenge.
 
-    Each line has the pattern "Step X must be finished before step Y can begin."
-    This function returns a dictionary with the step letter as keys, and Step
-    objects as the values. Each Step object has a set containing the letters of
-    its parent steps and children steps.
+    It ended up making sense to put everything together to allow for a degree
+    of communication and the ability to transparently modify in-place that I
+    couldn't get quite satisfactory using separate functions.
     """
-    results: Dict[str, Step] = {}
-    pattern = re.compile(r"\b([A-Z])\b")
-    with open(fname, "r") as f:
-        for line in f:
-            pair = pattern.findall(line)
-            try:
-                parent_step = pair[0]
-                child_step = pair[1]
-            except (IndexError, TypeError):
-                raise RuntimeError("Error reading input file")
 
-            if parent_step in results:
-                results[parent_step].children.add(child_step)
+    def __init__(self) -> None:
+        self.graph: DefaultDict[str, Set[str]] = defaultdict(set)
+        self.nodes: Set[str] = set()
+
+    def read_input(self, fname: str) -> None:
+        """Reads an AoC input file and assigns each node to self.graph"""
+        pattern = re.compile(r"\b([A-Z])\b")
+        with open(fname, "r") as f:
+            for line in f:
+                first, second = pattern.findall(line)
+                self.add_node(first, second)
+
+    def add_node(self, first: str, second: str) -> None:
+        """
+        For each line in the instructions, the descendant step is added to the
+        set for which the ancestor step is the key, in self.graph. Each step
+        is also added to the set of all nodes.
+        """
+        self.graph[first].add(second)
+        self.nodes.add(first)
+        self.nodes.add(second)
+
+    def get_depth(self) -> Dict[str, int]:
+        """
+        Returns a dictionary identifying the "depth," or number of ancestor
+        nodes, that each node has. I created this as a method instead of an
+        attribute so that I could modify depth values as I work through the
+        graph.
+        """
+        depth: Dict[str, int] = {}
+        for node in self.nodes:
+            depth[node] = sum(node in arr for arr in self.graph.values())
+        return depth
+
+    def part_1(self) -> str:
+        """In what order should the steps in your instructions be completed?"""
+        answer = ""
+        depth = self.get_depth()
+        queue = [n for n in self.nodes if depth[n] == 0]
+
+        while queue:
+            queue.sort(reverse=True)
+            letter = queue.pop()
+            answer += letter
+            for n in self.graph[letter]:
+                depth[n] -= 1
+                if depth[n] == 0:
+                    queue.append(n)
+        return answer
+
+    def part_2(self, n_workers: int, delay: int) -> int:
+        """
+        With 5 workers and the 60+ second step durations described above, how
+        long will it take to complete all of the steps?
+        """
+        timer = 0
+        workers: List[Tuple[int, str]] = []
+        depth = self.get_depth()
+        queue: List[str] = [n for n in self.nodes if depth[n] == 0]
+
+        while len(workers) < n_workers and queue:
+            queue.sort(reverse=True)
+            letter = queue.pop()
+            workers.append((timer + delay + ord(letter) - ord("A") + 1, letter))
+
+        while workers or queue:
+            if min(workers)[0] == timer:
+                workers.sort(reverse=True)
+                timer, letter = workers.pop()
+                for node in self.graph[letter]:
+                    depth[node] -= 1
+                    if depth[node] == 0:
+                        queue.append(node)
+
+                while len(workers) < n_workers and queue:
+                    queue.sort(reverse=True)
+                    letter = queue.pop()
+                    workers.append((timer + delay + ord(letter) - ord("A") + 1, letter))
             else:
-                results[parent_step] = Step(parent_step, children={child_step})
-
-            if child_step in results:
-                results[child_step].parents.add(parent_step)
-            else:
-                results[child_step] = Step(child_step, parents={parent_step})
-
-    return results
+                timer += 1
+        return timer
 
 
-def part_1(steps: Dict[str, Step]) -> str:
-    """
-    Returns a string containing the step letters in the correct order.
+if __name__ == "__main__":
+    example = Challenge()
+    example.read_input("test_input.txt")
+    print("Example Part 1:", example.part_1())
+    print("Example Part 2:", example.part_2(2, 0))
 
-    NOTE: This function modifies the `steps` input.
-    """
-    answer = ""
-
-    # Set containing the letters that do not have any unsatisfied dependents
-    ready = {step.letter for step in steps.values() if not step.parents}
-
-    # As long as `ready` is not empty, take the first character alphabetically
-    # Remove it from `ready`, and add it to `answer`
-    while ready:
-        letter = min(ready)
-        ready.remove(letter)
-        answer += letter
-
-        # For each child step of that letter, remove the current letter from
-        # that child's parent set
-        for child in steps[letter].children:
-            if letter in steps[child].parents:
-                steps[child].parents.remove(letter)
-            # If that child step does not have anything in the parents set, it
-            # is ready to be added
-            if not steps[child].parents:
-                ready.add(child)
-
-    return answer
-
-
-def part_2(steps: Dict[str, Step], n_workers: int = 5, delay: int = 60) -> int:
-    """
-    Given a dict of Steps, a number of workers, and a delay (in seconds),
-    return the number of seconds it takes to assemble the sleigh.
-
-    NOTE: This function modifies the `steps` input.
-    """
-
-    timer = 0
-    ready = {step.letter for step in steps.values() if not step.parents}
-
-    # Each worker will be a dict with the letter it's working on and the time
-    # remaining for that letter
-    workers = [{"letter": "", "duration": 0} for _ in range(n_workers)]
-    answer = ""
-
-    # For each letter, add one (to account for 0-based indexing) and the delay
-    # get the duration of that letter's work
-    durations = {
-        letter: ascii_uppercase.index(letter) + 1 + delay for letter in ascii_uppercase
-    }
-
-    while True:
-        # For each worker, if it has a letter, decrement the duration by 1
-        for w in workers:
-            if w["letter"]:
-                w["duration"] -= 1
-
-            # If that worker's duration is 0, check if that letter is in the
-            # steps dict. If it is, repeat the steps from part 1.
-            if w["duration"] == 0:
-                ltr = w["letter"]
-                if ltr in steps:
-                    for child in steps[ltr].children:
-                        if ltr in steps[child].parents:
-                            steps[child].parents.remove(ltr)
-                        if not steps[child].parents:
-                            ready.add(child)
-                    answer += ltr
-                    w["letter"] = ""
-                # If there are any steps ready to go, add the first one
-                # (alphabetically) to the worker, and remove it from `ready`
-                if ready:
-                    current_letter = min(ready)
-                    w["letter"] = current_letter
-                    ready.remove(current_letter)
-                    w["duration"] = durations[current_letter]
-
-        # If the answer contains all of the steps, we're done!
-        if set(answer) == set(steps):
-            return timer
-        # Otherwise, increment the timer and go back up to the top.
-        timer += 1
+    challenge = Challenge()
+    challenge.read_input("input.txt")
+    print("Challenge Part 1:", challenge.part_1())
+    print("Challenge Part 2:", challenge.part_2(5, 60))

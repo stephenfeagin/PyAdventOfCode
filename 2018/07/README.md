@@ -98,3 +98,25 @@ In this example, it would take 15 seconds for two workers to complete these step
 
 With 5 workers and the 60+ second step durations described above, how long will it take to complete all of the steps?
 ```
+
+## Notes
+
+I had a fine enough time with Part 1 -- definitely interesting and tricky, but
+I figured it out. Part 2, however, just completely escaped me. I had what I
+thought was a reasonable solution, and it worked with the example data.
+However, when I tried it with my own input, AoC told me that the result was
+too high. It kept giving an answer of `1001`. Just out of curiosity, I wanted
+to see if I had somehow made an off-by-one error, so I input `1000`, which
+turned out to be correct. So just by chance, I knew what the correct answer
+was, but I couldn't get to it. After three different iterations and approaches,
+I took to the Reddit Day 7 Solutions Mega-Thread. I did some reading on
+[Depth First Search](https://geeksforgeeks.org/depth-first-search-or-dfs-for-a-graph/)
+and [Topological Sorting](https://geeksforgeeks.org/topological-sorting/) so
+that I could even understand what most of the solutions in the thread were
+talking about. I copy-pasted [this
+answer](https://www.reddit.com/r/adventofcode/comments/a3wmnl/2018_day_7_solutions/eb9sfnm)
+from user [jonathan\_paulson](https://reddit.com/user/jonathan_paulson), and it
+gave the right answer -- `1000`. I dissected it a little bit, figured out the
+gist of what it was doing, and adapted it into a form that made the most sense
+to me. Thank you, jonathan\_paulson!
+
