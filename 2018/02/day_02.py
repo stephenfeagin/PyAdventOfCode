@@ -34,7 +34,7 @@ def part_2(data: List[str]) -> str:
         for i in range(len(code)):
             substring = code[:i] + "*" + code[i + 1 :]
             if substring in results:
-                return re.sub(pattern="\*", repl="", string=substring)
+                return re.sub(pattern=r"\*", repl="", string=substring)
             results.append(substring)
 
     raise RuntimeError("No solution found!")
