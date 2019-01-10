@@ -7,9 +7,9 @@ def test_part_1():
         ([1, 1, 1], 3),
         ([1, 1, -2], 0),
         ([-1, -2, -3], -6),
-     )
+    )
     for data, result in test_cases:
-       assert part_1(data) == result
+        assert part_1(data) == result
 
 
 def test_part_2():
