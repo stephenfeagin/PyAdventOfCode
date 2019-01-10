@@ -2,21 +2,21 @@
 2018 Day 1: Chronal Calibration
 """
 from collections import defaultdict
-import unittest
+from typing import DefaultDict, List
 
 
-def read_input(fname):
+def read_input(fname: str) -> List[int]:
     """Reads the input file as a list of integers"""
     with open(fname, "r") as f:
         data = [int(line) for line in f]
     return data
 
 
-def part_1(data):
+def part_1(data: List[int]) -> int:
     return sum(data)
 
 
-def part_2(data):
+def part_2(data: List[int]) -> int:
     """
     You start with frequency = 0, and the entire history of frequencies is [0]
     Because we may need to repeat the data list, we use a for loop nested in a while True
@@ -28,7 +28,7 @@ def part_2(data):
     next item in the data list
     """
 
-    freqs = defaultdict(int)
+    freqs: DefaultDict[int, int] = defaultdict(int)
     current_freq = 0
     freqs[current_freq] += 1
     while True:
@@ -39,25 +39,8 @@ def part_2(data):
             freqs[current_freq] += 1
 
 
-# Testing
-class TestDay1(unittest.TestCase):
-    def test_part_1(self):
-        test_cases = (
-            ([1, -2, 3, 1], 3),
-            ([1, 1, 1], 3),
-            ([1, 1, -2], 0),
-            ([-1, -2, -3], -6),
-        )
-        for data, result in test_cases:
-            self.assertEqual(part_1(data), result)
+if __name__ == "__main__":
+    DATA = read_input("input.txt")
 
-    def test_part_2(self):
-        test_cases = (
-            ([1, -2, 3, 1], 2),
-            ([1, -1], 0),
-            ([3, 3, 4, -2, -4], 10),
-            ([-6, 3, 8, 5, -5], 5),
-            ([7, 7, -2, -7, -4], 14),
-        )
-        for data, result in test_cases:
-            self.assertEqual(part_2(data), result)
+    print("Part 1:", part_1(DATA))
+    print("Part 2:", part_2(DATA))
