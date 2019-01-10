@@ -1,14 +1,7 @@
 from day_06 import part_1, part_2, Point, read_input
 
 
-POINTS = [
-    Point(1, 1),
-    Point(1, 6),
-    Point(8, 3),
-    Point(3, 4),
-    Point(5, 5),
-    Point(8, 9),
-]
+POINTS = [Point(1, 1), Point(1, 6), Point(8, 3), Point(3, 4), Point(5, 5), Point(8, 9)]
 
 
 def test_read_input():
