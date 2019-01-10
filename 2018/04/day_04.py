@@ -152,3 +152,10 @@ def part_2(guards: Dict[int, Guard]) -> int:
             minutes_slept_then = guard.asleep[guard.most_asleep_minute()]
 
     return guard_id * most_asleep_minute
+
+
+if __name__ == "__main__":
+    date_entries = read_input("input.txt")
+    guards = track_guards(date_entries)
+    print("Part 1:", part_1(guards))
+    print("Part 2:", part_2(guards))
