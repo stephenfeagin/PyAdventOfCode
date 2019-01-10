@@ -1,15 +1,11 @@
 import pytest
 
 from day_07 import Challenge
+
+
 @pytest.fixture
 def steps():
-    steps = {
-        "A": {"B", "D"},
-        "B": {"E"},
-        "C": {"A", "F"},
-        "D": {"E"},
-        "F": {"E"},
-    }
+    steps = {"A": {"B", "D"}, "B": {"E"}, "C": {"A", "F"}, "D": {"E"}, "F": {"E"}}
     return steps
 
 
@@ -17,7 +13,7 @@ def steps():
 def example():
     example = Challenge()
     example.read_input("test_input.txt")
-    return example 
+    return example
 
 
 def test_read_input(example, steps):
