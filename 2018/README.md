@@ -9,12 +9,12 @@ the following files:
 
 - `README.md`: The original brief from the AoC website and any notes and/or
 attribution
-- `day\_0x.py`: The solutions file for that day
+- `day_0x.py`: The solutions file for that day
 - `input.txt`: The full puzzle input from AoC
-- `test\_day\_0x.py`: File with pytest code for that day's examples
-- `test\_input\*.txt`: Optional test input file(s) for the examples. Not all
+- `test_day_0x.py`: File with pytest code for that day's examples
+- `test_input*.txt`: Optional test input file(s) for the examples. Not all
 days have this file, as the example input may be typed directly into
-`test\_day\_0x.py`.
+`test_day_0x.py`.
 
 I have tried to be as consistent as possible across challenge days for 2018.
 Every `.py` file for completed solutions has been run through 
