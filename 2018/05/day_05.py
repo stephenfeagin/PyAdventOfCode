@@ -20,7 +20,6 @@ not react.
 
 import re
 from typing import List, Set
-import unittest
 
 
 def part_1(polymer: str) -> int:
@@ -86,13 +85,9 @@ def part_2(polymer: str) -> int:
     return min(lengths)
 
 
-class TestDay5(unittest.TestCase):
-    def setUp(self):
-        with open("test_input.txt", "r") as f:
-            self.TEST_CASE = f.read().strip()
+if __name__ == "__main__":
+    with open("input.txt", "r") as f:
+        polymer = f.read().rstrip()
 
-    def test_part_1(self):
-        self.assertEqual(part_1(self.TEST_CASE), 10)
-
-    def test_part_2(self):
-        self.assertEqual(part_2(self.TEST_CASE), 4)
+    print("Part 1:", part_1(polymer))
+    print("Part 2:", part_2(polymer))
