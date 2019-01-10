@@ -59,7 +59,9 @@ def define_canvas(points: List[Point]) -> Set[Point]:
     max_y: int = max(pt.y for pt in points)
     min_y: int = min(pt.y for pt in points)
 
-    return set(Point(x, y) for x in range(min_x, max_x + 1) for y in range(min_y, max_y + 1))
+    return set(
+        Point(x, y) for x in range(min_x, max_x + 1) for y in range(min_y, max_y + 1)
+    )
 
 
 def part_1(points: List[Point]) -> int:
@@ -83,7 +85,7 @@ def part_2(points: List[Point], limit: int) -> int:
 
     # Initialize an accumulator variable
     area = 0
-    
+
     # For each point in canvas acting as an origin, if the sum of the distances
     # to all other points is less than `limit`, add one to `area`
     # This takes advantage of using int(True) == 1
@@ -93,22 +95,7 @@ def part_2(points: List[Point], limit: int) -> int:
     return area
 
 
-class TestDay6(unittest.TestCase):
-    def setUp(self):
-        self.POINTS: List[Point] = [
-            Point(1, 1),
-            Point(1, 6),
-            Point(8, 3),
-            Point(3, 4),
-            Point(5, 5),
-            Point(8, 9),
-        ]
-
-    def test_read_input(self):
-        self.assertEqual(read_input("test_input.txt"), self.POINTS)
-
-    def test_part_1(self):
-        self.assertEqual(part_1(self.POINTS), 17)
-
-    def test_part_2(self):
-        self.assertEqual(part_2(self.POINTS, 32), 16)
+if __name__ == "__main__":
+    points = read_input("input.txt")
+    print("Part 1:", part_1(points))
+    print("Part 2:", part_2(points, 10000))
